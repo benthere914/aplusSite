@@ -141,9 +141,11 @@ model Discount {
     id Int @id @default(autoincrement())
     name String
     is_percentage Boolean @default(false)
-    id_flat_rate Boolean @default(false)
+    is_flat_rate Boolean @default(false)
     percentage Decimal @default(0.10)
     flat_rate Decimal @default(50)
+    active Boolean @default(true)
+    autoAdd Boolean @default(false)
     customers Customer[]
 }
 model Tax {
