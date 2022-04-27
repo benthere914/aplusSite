@@ -10,412 +10,422 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // many to many
 
 model Appliance_On_Job {
-    id Int @id @default(autoincrement())
-    appliance_id Int
-    job_id Int
+  id           Int @id @default(autoincrement())
+  appliance_id Int
+  job_id       Int
 
-    appliance Appliance @relation(fields: [appliance_id], references: [id])
-    job Job @relation(fields: [job_id], references: [id])
+  appliance Appliance @relation(fields: [appliance_id], references: [id])
+  job       Job       @relation(fields: [job_id], references: [id])
 }
+
 model Symptom_On_Job {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    symptom_id Int
-    job_id Int
+  symptom_id Int
+  job_id     Int
 
-    symptom Symptom @relation(fields: [symptom_id], references: [id])
-    job Job @relation(fields: [job_id], references: [id])
+  symptom Symptom @relation(fields: [symptom_id], references: [id])
+  job     Job     @relation(fields: [job_id], references: [id])
 }
+
 model Part_On_Job {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    part_id Int
-    job_id Int
+  part_id Int
+  job_id  Int
 
-    part Part @relation(fields: [part_id], references: [id])
-    job Job @relation(fields: [job_id], references: [id])
+  part Part @relation(fields: [part_id], references: [id])
+  job  Job  @relation(fields: [job_id], references: [id])
 }
-model Location_On_Customer {
-    id Int @id @default(autoincrement())
 
-    location_id Int
-    customer_id Int
 
-    location Customer_Location @relation(fields: [location_id], references: [id])
-    customer Customer @relation(fields: [customer_id], references: [id])
-}
 model Technician_On_Visit {
-    id Int @id @default(autoincrement())
-    technician_id Int
-    visit_id Int
+  id            Int @id @default(autoincrement())
+  technician_id Int
+  visit_id      Int
 
-    technician Technician @relation(fields: [technician_id], references: [id])
-    visit Visit @relation(fields: [visit_id], references: [id])
+  technician Technician @relation(fields: [technician_id], references: [id])
+  visit      Visit      @relation(fields: [visit_id], references: [id])
 }
-
-
-
-
 
 model User_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 }
+
 model User {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    first_name String
-    last_name String
-    user_name String
-    email String
-    user_logs User_Log[]
-    appliance_logs Appliance_Log[]
-    sale_logs Sale_Log[]
-    customer_logs Customer_Log[]
-    job_logs Job_Log[]
-    visit_logs Visit_Log[]
-    technician_logs Technician_Log[]
+  first_name      String
+  last_name       String
+  user_name       String
+  email           String
+  user_logs       User_Log[]
+  appliance_logs  Appliance_Log[]
+  sale_logs       Sale_Log[]
+  customer_logs   Customer_Log[]
+  job_logs        Job_Log[]
+  visit_logs      Visit_Log[]
+  technician_logs Technician_Log[]
 }
-
-
-
-
 
 model Appliance_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 
 }
+
 model Appliance_Type {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    name String
-    appliances Appliance[]
+  name       String
+  appliances Appliance[]
 }
+
 model Appliance_Manufacturer {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    name String
-    appliances Appliance[]
+  name       String
+  appliances Appliance[]
 }
+
 model Appliance_Style {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    name String
-    appliances Appliance[]
+  name       String
+  appliances Appliance[]
 }
+
 model Appliance {
-    id Int @id @default(autoincrement())
-    type_id Int
-    manufacturer_id Int
-    style_id Int
+  id              Int @id @default(autoincrement())
+  type_id         Int
+  manufacturer_id Int
+  style_id        Int
 
-    model_number String
-    type Appliance_Type @relation(fields: [type_id], references: [id])
-    brand Appliance_Manufacturer @relation(fields: [manufacturer_id], references: [id])
-    format Appliance_Style @relation(fields: [style_id], references: [id])
-    jobs Appliance_On_Job[]
+  model_number String
+  type         Appliance_Type         @relation(fields: [type_id], references: [id])
+  brand        Appliance_Manufacturer @relation(fields: [manufacturer_id], references: [id])
+  format       Appliance_Style        @relation(fields: [style_id], references: [id])
+  jobs         Appliance_On_Job[]
 }
-
-
-
 
 model Sale_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 }
+
 model Discount {
-    id Int @id @default(autoincrement())
-    name String
-    is_percentage Boolean @default(false)
-    is_flat_rate Boolean @default(false)
-    percentage Decimal @default(0.10)
-    flat_rate Decimal @default(50)
-    active Boolean @default(true)
-    autoAdd Boolean @default(false)
-    customers Customer[]
+  id            Int        @id @default(autoincrement())
+  name          String
+  is_percentage Boolean    @default(false)
+  is_flat_rate  Boolean    @default(false)
+  percentage    Decimal    @default(0.10)
+  flat_rate     Decimal    @default(50)
+  active        Boolean    @default(true)
+  auto_add      Boolean    @default(false)
+  customers     Customer[]
 }
+
 model Tax {
-    id Int @id @default(autoincrement())
-    value Decimal
-    sales Sale[]
+  id    Int     @id @default(autoincrement())
+  value Decimal
+  sales Sale[]
 }
+
 model Transaction {
-    id Int @id @default(autoincrement())
-    sale_id Int
+  id      Int @id @default(autoincrement())
+  sale_id Int
 
-    payment_type String
-    payment_terms String
-    date DateTime
-    sale Sale @relation(fields: [sale_id], references: [id])
+  payment_type  String
+  payment_terms String
+  date          DateTime
+  sale          Sale     @relation(fields: [sale_id], references: [id])
 
 }
+
 model Sale {
-    id Int @id @default(autoincrement())
-    job_id Int
-    tax_id Int
+  id     Int @id @default(autoincrement())
+  job_id Int
+  tax_id Int
 
-    payment_status String
-    tax_percentage Tax @relation(fields: [tax_id], references: [id])
-    total_cost_after_tax Decimal
-    total_cost_before_tax Decimal
-    total_paid_before_tax Decimal
-    total_paid_after_tax Decimal
-    total_due Decimal
-    transactions Transaction[]
-    job Job @relation(fields: [job_id], references: [id])
+  payment_status        String
+  tax_percentage        Tax           @relation(fields: [tax_id], references: [id])
+  total_cost_after_tax  Decimal
+  total_cost_before_tax Decimal
+  total_paid_before_tax Decimal
+  total_paid_after_tax  Decimal
+  total_due             Decimal
+  transactions          Transaction[]
+  job                   Job           @relation(fields: [job_id], references: [id])
 }
-
-
-
 
 model Customer_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 }
+
 model Customer_Contact {
-    id Int @id @default(autoincrement())
-    customer_id Int
+  id          Int @id @default(autoincrement())
+  customer_id Int
 
-    first_name String
-    last_name String
-    phone_number Json
-    email Json
-    customer Customer @relation(fields: [customer_id], references: [id])
+  first_name   String
+  last_name    String
+  phone_number Json
+  email        Json
+  customer     Customer @relation(fields: [customer_id], references: [id])
 }
+
 model Customer_Location {
-    id Int @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
+  customer_id Int
 
-    city String
-    state String @default("TX")
-    postal_code String
-    street_name String
-    street_number String
-    suite_number String?
-    building_type String @default("House")
-    special_instructions String
-    is_gated Boolean
-    gate_code String?
-    visits Visit[]
-    customers Location_On_Customer[]
+  city                 String
+  state                String   @default("TX")
+  postal_code          String
+  street_name          String
+  street_number        String
+  suite_number         String?
+  building_type        String   @default("House")
+  special_instructions String
+  is_gated             Boolean
+  gate_code            String?
+  visits               Visit[]
+  customer             Customer @relation(fields: [customer_id], references: [id])
+
 }
+
+model Contract_Timeline {
+  id         Int        @id @default(autoincrement())
+  start      DateTime
+  expiration DateTime
+  Customer   Customer[]
+}
+
 model Customer_Contract {
-    id Int @id @default(autoincrement())
-
-    name String
-    started DateTime
-    expires DateTime
-    customers Customer[]
+  id       Int        @id @default(autoincrement())
+  name     String
+  auto_add Boolean    @default(false)
+  active   Boolean    @default(true)
+  Customer Customer[]
 }
+
 model Customer {
-    id Int @id @default(autoincrement())
-    parent_customer_id Int?
-    discount_id Int
-    contract_id Int
+  id                   Int  @id @default(autoincrement())
+  parent_customer_id   Int?
+  discount_id          Int
+  contract_id          Int
+  contract_timeline_id Int
 
-    locations Location_On_Customer[]
-    contacts Customer_Contact[]
-    discount Discount @relation(fields: [discount_id], references: [id])
-    contract Customer_Contract @relation(fields: [contract_id], references: [id])
-    parent_customer Customer? @relation("customerTree", fields: [parent_customer_id], references: [id])
-    children Customer[] @relation("customerTree")
-    jobs Job[]
+  locations            Customer_Location[]
+  contacts             Customer_Contact[]
+  discount             Discount               @relation(fields: [discount_id], references: [id])
+  contract             Customer_Contract      @relation(fields: [contract_id], references: [id])
+  Contract_timeline    Contract_Timeline      @relation(fields: [contract_timeline_id], references: [id])
+  parent_customer      Customer?              @relation("customerTree", fields: [parent_customer_id], references: [id])
+  children             Customer[]             @relation("customerTree")
+  jobs                 Job[]
 }
-
-
-
 
 model Job_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 }
+
 model Picture {
-    id Int @id @default(autoincrement())
-    job_id Int
-    name String
-    file_location String
-    is_private Boolean
-    comment String
-    job Job @relation(fields: [job_id], references: [id])
+  id            Int     @id @default(autoincrement())
+  job_id        Int
+  name          String
+  file_location String
+  is_private    Boolean
+  comment       String
+  job           Job     @relation(fields: [job_id], references: [id])
 }
+
 model Document {
-    id Int @id @default(autoincrement())
-    job_id Int
+  id     Int @id @default(autoincrement())
+  job_id Int
 
-    name String
-    file_location String
-    is_private Boolean
-    comment String
-    job Job @relation(fields: [job_id], references: [id])
+  name          String
+  file_location String
+  is_private    Boolean
+  comment       String
+  job           Job     @relation(fields: [job_id], references: [id])
 }
+
 model Symptom {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    value String
-    jobs Symptom_On_Job[]
+  value String
+  jobs  Symptom_On_Job[]
 }
+
 model Part {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    model_number String
-    name String
-    last_cost Decimal
-    jobs Part_On_Job[]
+  model_number String
+  name         String
+  last_cost    Decimal
+  jobs         Part_On_Job[]
 }
+
 model Job_Category {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    name String
-    jobs Job[]
+  name String
+  jobs Job[]
 }
+
 model Job_Source {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    name String
-    jobs Job[]
+  name String
+  jobs Job[]
 }
+
 model Job_phase {
-    id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-    name String
-    jobs Job[]
+  name String
+  jobs Job[]
 }
+
 model Job {
-    id Int @id @default(autoincrement())
-    category_id Int
-    source_id Int
-    phase_id Int
-    customer_id Int
+  id          Int @id @default(autoincrement())
+  category_id Int
+  source_id   Int
+  phase_id    Int
+  customer_id Int
 
-    pictures Picture[]
-    documents Document[]
-    appliances Appliance_On_Job[]
-    symptoms Symptom_On_Job[]
-    parts Part_On_Job[]
-    visits Visit[]
-    sale Sale[]
-    category Job_Category @relation(fields: [category_id], references: [id])
-    source Job_Source @relation(fields: [source_id], references: [id])
-    phase Job_phase @relation(fields: [phase_id], references: [id])
-    customer Customer @relation(fields: [customer_id], references: [id])
+  pictures   Picture[]
+  documents  Document[]
+  appliances Appliance_On_Job[]
+  symptoms   Symptom_On_Job[]
+  parts      Part_On_Job[]
+  visits     Visit[]
+  sale       Sale[]
+  category   Job_Category       @relation(fields: [category_id], references: [id])
+  source     Job_Source         @relation(fields: [source_id], references: [id])
+  phase      Job_phase          @relation(fields: [phase_id], references: [id])
+  customer   Customer           @relation(fields: [customer_id], references: [id])
 }
-
-
 
 model Visit_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 }
+
 model On_Site_Contact {
-    id Int @id @default(autoincrement())
-    first_name String?
-    last_name String?
-    email String?
-    phone_number String?
-    visits Visit[]
+  id           Int     @id @default(autoincrement())
+  first_name   String?
+  last_name    String?
+  email        String?
+  phone_number String?
+  visits       Visit[]
 }
+
 model Time_Slot {
-    id Int @id @default(autoincrement())
-    visit_id Int
+  id       Int @id @default(autoincrement())
+  visit_id Int @unique
 
-    duration Decimal
-    arival_start String
-    arival_end String
-    leave_start String
-    leave_end String
+  duration     Decimal
+  arival_start String
+  arival_end   String
+  leave_start  String
+  leave_end    String
 
-    date DateTime
+  date DateTime
 
-    visit Visit @relation(fields: [visit_id], references: [id])
+  visit Visit @relation(fields: [visit_id], references: [id])
 }
+
 model Visit {
-    id Int @id @default(autoincrement())
-    job_id Int
-    location_id Int
-    time_slot_id Int
-    on_site_contact_id Int
+  id                 Int @id @default(autoincrement())
+  job_id             Int
+  location_id        Int
+  time_slot_id       Int
+  on_site_contact_id Int
 
-    number Int
-    tech_notes String
-    description String
-    completion_notes String
-    note_to_customer String
-    on_site_contact On_Site_Contact @relation(fields: [on_site_contact_id], references: [id])
-    location Customer_Location @relation(fields: [location_id], references: [id])
-    time_slot Time_Slot?
-    job Job @relation(fields: [job_id], references: [id])
-    technicians Technician_On_Visit[]
-    technician_visit_statuses Technician_Visit_Status[]
+  number                    Int
+  tech_notes                String
+  description               String
+  completion_notes          String
+  note_to_customer          String
+  on_site_contact           On_Site_Contact           @relation(fields: [on_site_contact_id], references: [id])
+  location                  Customer_Location         @relation(fields: [location_id], references: [id])
+  time_slot                 Time_Slot?
+  job                       Job                       @relation(fields: [job_id], references: [id])
+  technicians               Technician_On_Visit[]
+  technician_visit_statuses Technician_Visit_Status[]
 }
-
-
-
 
 model Technician_Log {
-    id Int @id @default(autoincrement())
-    user_id Int
+  id      Int @id @default(autoincrement())
+  user_id Int
 
-    date DateTime
-    user User @relation(fields: [user_id], references: [id])
+  date DateTime
+  user User     @relation(fields: [user_id], references: [id])
 }
+
 model Technician_Visit_Status {
-    id Int @id @default(autoincrement())
-    visit_id Int
+  id       Int @id @default(autoincrement())
+  visit_id Int
 
-    visit Visit @relation(fields: [visit_id], references: [id])
-    value String
-    date DateTime
+  visit Visit    @relation(fields: [visit_id], references: [id])
+  value String
+  date  DateTime
 }
+
 model Technician_Address {
-    id Int @id @default(autoincrement())
-    technician_id Int
+  id            Int @id @default(autoincrement())
+  technician_id Int
 
-    city String
-    state String @default("TX")
-    postal_code String
-    street_name String
-    street_number String
-    suite_number String
-    building_type String
-    special_instructions String
-    is_gated Boolean
-    technician Technician @relation(fields: [technician_id], references: [id])
+  city                 String
+  state                String     @default("TX")
+  postal_code          String
+  street_name          String
+  street_number        String
+  suite_number         String
+  building_type        String
+  special_instructions String
+  is_gated             Boolean
+  technician           Technician @relation(fields: [technician_id], references: [id])
 }
+
 model Technician_Contact {
-    id Int @id @default(autoincrement())
-    technician_id Int
-    first_name String
-    last_name String
-    phone_number Json
-    email Json
-    technician Technician @relation(fields: [technician_id], references: [id])
+  id            Int        @id @default(autoincrement())
+  technician_id Int
+  first_name    String
+  last_name     String
+  phone_number  Json
+  email         Json
+  technician    Technician @relation(fields: [technician_id], references: [id])
 }
-model Technician {
-    id Int @id @default(autoincrement())
 
-    contact Technician_Contact[]
-    address Technician_Address[]
-    visits Technician_On_Visit[]
+model Technician {
+  id Int @id @default(autoincrement())
+
+  contact Technician_Contact[]
+  address Technician_Address[]
+  visits  Technician_On_Visit[]
 }
