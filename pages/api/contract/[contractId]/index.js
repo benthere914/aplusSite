@@ -7,15 +7,15 @@ export default async (req, res) => {
         switch (req.method) {
             case 'GET':
                 // get a customer contract by id
-                contract = await prisma.customer_Contract.findUnique({where: {id: contractId}})
+                contract = await prisma.customer_Contract.findUnique({where: {id: +contractId}})
                 return res.status(200).json(contract)
             case 'PUT':
                 // update a customer contract by id
-                const {contract_data} = req.body
-                const contractData = JSON.parse(contract_data)
-                contractData.autoAdd = (contractData.autoAdd === 'true')
-                contractData.active = (contractData.active === 'true')
-                contract = await prisma.customer_Contract.update({where: {id: contractId}, data})
+                const {contractData} = req.body
+                // const contractData = JSON.parse(contract_data)
+                // contractData.autoAdd = (contractData.autoAdd === 'true')
+                // contractData.active = (contractData.active === 'true')
+                contract = await prisma.customer_Contract.update({where: {id: +contractId}, data})
                 return res.status(200).json(contract)
             case 'DELETE':
                 // delete a customer contract by id

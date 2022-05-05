@@ -3,7 +3,7 @@ const prisma = new PrismaClient()
 export default async (req, res) => {
     try {
         const {customerId} = req.query
-        const customer = prisma.customer.findUnique({where: {id: customerId}})
+        const customer = prisma.customer.findUnique({where: {id: +customerId}})
         let discount
         switch (req.method) {
             case 'GET':
