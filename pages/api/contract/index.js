@@ -6,10 +6,8 @@ export default async (req, res) => {
         switch (req.method) {
             case 'POST':
                 // create a customer contract
-                const {contract_data} = req.body
-                const contractData = JSON.parse(contract_data)
-                contractData.auto_add = (contractData.auto_add === 'true')
-                contractData.active = (contractData.active === 'true')
+                const {contractData} = req.body
+                console.log(contractData)
                 contract = await prisma.customer_Contract.create({data: contractData})
                 return res.status(200).json(contract)
             case 'GET':

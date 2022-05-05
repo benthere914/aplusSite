@@ -5,30 +5,46 @@ export default async (req, res) => {
         switch (req.method) {
             case 'POST':
                 // create one customer
-                const { customer_data, contact_data, location_data } = req.body
-                const customerData = JSON.parse(customer_data)
-                const contactData = JSON.parse(contact_data)
-                const locationData = JSON.parse(location_data)
-                const customer = await prisma.customer.create({data: customerData})
-                Promise.all([
-                    prisma.customer_Contact.create({data: {...contactData, customer_id: +customer.id}}),
-                    prisma.customer_Location.create({data: {...locationData, customer_id: +customer.id}})
-                ])                       
-                return res.status(200).json({'message': 'created'})
+                const { customerData, timelineData, contactData, locationData } = req.body
+                // console.log(req.body)
+                // console.log(timelineData)
+                timelineData.start = new Date(timelineData.start)
+                timelineData.expiration = new Date(timelineData.expiration)
+                const contract_timeline = await prisma.contract_Timeline.create({data: timelineData})
+                console.log(contract_timeline)
+                const customer = await prisma.customer.create({data: {...customerData, contract_timeline_id: contract_timeline.id}})
+                
+                console.log(customer)
+                for (let i = 0; i < contactData.length; i++) contactData[i].customer_id = customer.id
+                for (let i = 0; i < locationData.length; i++) locationData[i].customer_id = customer.id
+                const [contacts, locations, count ] = await Promise.all([
+                    prisma.customer_Contact.createMany({data: contactData}),
+                    prisma.customer_Location.createMany({data: locationData}),
+                    prisma.customer.count({})
+                ])
+                
+                return res.status(200).json({'message': 'created', count})
             case 'GET':
                 // get all customers
-                const customers = await prisma.customer.findMany()
-                for (let i = 0; i < customers.length; i++){
-                    let [contract, discount, contract_timeline, contact, location] = await Promise.all([
-                        await prisma.customer_Contract.findUnique({where: {id: +customers[i].contract_id}}),
-                        await prisma.discount.findUnique({where: {id: +customers[i].discount_id}}),
-                        await prisma.contract_Timeline.findUnique({where: {id: +customers[i].contract_timeline_id}}),
-                        await prisma.customer_Contact.findMany({where: {customer_id: +customers[i].id}}),
-                        await prisma.customer_Location.findMany({where: {customer_id: +customers[i].id}})
-                    ])
-                    customers[i] = { contract, discount, contract_timeline, contact, location }
+                const customers = await prisma.customer.findMany({
+                    include: {
+                        contract: true, 
+                        Contract_timeline: true,
+                        discount: true,
+                        contacts: true, 
+                        locations: true, 
+                        parent_customer: true,
+                        children: true
+                    }
                 }
+                )
                 return res.status(200).json({customers: customers})
+            case 'DELETE':
+                await prisma.customer_Contact.deleteMany({})
+                await prisma.customer_Location.deleteMany({})
+                await prisma.customer.deleteMany({})
+                await prisma.contract_Timeline.deleteMany({})
+                return res.status(200).json({message: 'deleted'})
         }
     } catch (error) {
         return res.status(400).json({error: error.message})

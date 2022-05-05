@@ -12,11 +12,10 @@ export default async (req, res) => {
                 return res.status(200).json(timeline)
             case 'PUT':
                 // update the contract timeline's expiration on a customer
-                const {timeline_data} = req.body
-                const timeLineData = JSON.parse(timeline_data)
-                timeLineData.start = new Date(timeLineData.start)
-                timeLineData.expiration = new Date(timeLineData.expiration)
-                timeline = await prisma.contract_Timeline.update({where: {id: +(await customer).contract_timeline_id}, data: timeLineData})    
+                const {timelineData} = req.body
+                timelineData.start = new Date(timelineData.start)
+                timelineData.expiration = new Date(timelineData.expiration)
+                timeline = await prisma.contract_Timeline.update({where: {id: +(await customer).contract_timeline_id}, data: timelineData})    
                 return res.status(200).json(timeline)
         }
     } catch (error) {
